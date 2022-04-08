@@ -1,0 +1,27 @@
+{
+    // This is not valid comments in normal json file but they work in visual studio code
+    // You must set PATH_TO_FX to the location of the JavaFX SDK in your environment
+    // Windows machine
+    // "vmArgs": "--module-path {env:PATH_TO_FX} --add-modules javafx.controls,javafx.fxml",
+    // PATH_TO_FX = "c:/Program Files/Java/javafx-sdk-17.0.1/lib"
+    // ECS Linux machines 
+    // export PATH_TO_FX= /usr/pkg/java/javafx-sdk-11.0.2/lib/
+    // "vmArgs": "--module-path $PATH_TO_FX --add-modules javafx.controls",
+    "version": "0.1.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "comp261.assig2/comp261.assig2.Main",
+            "projectName": "Assignment2"
+        },
+        {
+            "type": "java",
+            "name": "Bus Network",
+            "request": "launch",
+            "mainClass": "comp261.assig2.Main",
+            "vmArgs": "--module-path \"C:/Program Files/Java/javafx-sdk-17.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}

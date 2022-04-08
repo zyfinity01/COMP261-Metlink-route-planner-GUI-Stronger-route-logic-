@@ -14,13 +14,7 @@
             "name": "Launch Main",
             "request": "launch",
             "mainClass": "comp261.assig2/comp261.assig2.Main",
-            "projectName": "Assignment2"
-        },
-        {
-            "type": "java",
-            "name": "Bus Network",
-            "request": "launch",
-            "mainClass": "comp261.assig2.Main",
+            "projectName": "Assignment2",
             "vmArgs": "--module-path \"C:/Program Files/Java/javafx-sdk-17.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]

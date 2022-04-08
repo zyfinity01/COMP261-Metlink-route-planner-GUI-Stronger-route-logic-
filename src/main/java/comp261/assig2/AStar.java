@@ -40,7 +40,7 @@ public class AStar {
         // create a new array list for the path to be extracted
         ArrayList<PathItem> visitedStops = new ArrayList<PathItem>();
        
-        int currentFingeCost = 0;
+        double currentFringeCost = 0;
 
         // vital step to make sure you can find the new path
         graph.resetVisited();
@@ -52,41 +52,52 @@ public class AStar {
 
         // while the queue is not empty
         while (!fringe.isEmpty()) {
-            // TODO: get the stop with the lowest cost
-            // get the top of the queue
-            PathItem current = fringe.poll();
+            // get the stop with the lowest cost
+            PathItem currentPathItem = fringe.poll();
+            Stop currentStop = currentPathItem.getStop();
+         
+            // check if the stop from the queue has been visited
+            if(currentStop.isVisited()){
+                continue; 
+            }   
+            // if the stop has not been visited, mark as visited and add to visitedStops list
+            currentStop.setVisited(true);
+            visitedStops.add(currentPathItem);
+            // set the cost for the current node
+            currentStop.setCost(currentPathItem.cost);
+            currentFringeCost = currentPathItem.cost;
 
-            // TODO: check if the stop from the queue has been visited
-
-            // TODO: if the stop has not been visited, mark as visited and add to visitedStops list
-            // TODO: set the cost for the current node
             totalExplored++;
 
-            // TODO: if the current stop is the end stop
-            {
-                // TODO: path to return
-                // ArrayList<Edge> shortestEdgePath = makeEdgePath(graph, visitedStops, start, end);
-                // return shortestEdgePath;
+            // if the current stop is the end stop
+            if(currentStop == end){
+                //path to return
+                ArrayList<Edge> shortestEdgePath = makeEdgePath(graph, visitedStops, start, end);
+                return shortestEdgePath;
             }
 
-            // TODO: go through each of the current stop's neighbours and add to the fringe
-            {
-                // TODO: get the neighbour from the edge
+            // go through each of the current stop's neighbours and add to the fringe
+            for(Edge edge : currentStop.getNeighbours()){
+                // get the neighbour from the edge
+                Stop neighbour = edge.getToStop();
 
-                // TODO: if the neighbour has not been visited already
-                {
-                    //TODO: set the neighbour's cost to the current stop's cost + the edge's cost (time or distance)
+                // if the neighbour has not been visited already
+                if(!neighbour.isVisited()){
+                    //set the neighbour's cost to the current stop's cost + the edge's cost (time or distance)
+                    neighbour.setCost(currentStop.getCost() + neighbour.getCost());
                     
-                    /* Error checking is useful
-                        if (cost < 0) {
+                    //Error checking is useful
+                    if (neighbour.getCost() < 0) {
                             System.out.println("Error: negative cost");
-                    }*/
+                    }
 
-                    // TODO: calculate the new f value using g edge cost and heuristic
+                    // calculate the new f value using g edge cost and heuristic
                     // something like
-                    // f = g(start, currentStop) + edge.getCost() + heuristic(neighbour, end);
+                    //f = g(start, currentStop) + edge.getCost() + heuristic(neighbour, end);
+                    f = f(currentStop, edge.getCost(), neighbour, end);
 
-                    // TODO: add the neighbour to the queue as a new PathItem
+                    //add the neighbour to the queue as a new PathItem
+                    fringe.add(new PathItem(neighbour, neighbour.getCost(), f, currentStop, edge));
                     // using somthing like neighbour, cost, f, prev, edge 
                 }
             }
@@ -147,8 +158,8 @@ public class AStar {
     }
 
     public static double heuristic(Stop current, Stop goal) {
-        // TODO: calculate a heuristic for the current stop to the goal stop
-        return 0;
+        //calculate a heuristic for the current stop to the goal stop
+        return current.distance(goal);
     }
 
 }

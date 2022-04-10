@@ -84,7 +84,7 @@ public class AStar {
                 // if the neighbour has not been visited already
                 if(!neighbour.isVisited()){
                     //set the neighbour's cost to the current stop's cost + the edge's cost (time or distance)
-                    neighbour.setCost(currentStop.getCost() + neighbour.getCost());
+                    neighbour.setCost(currentStop.getCost() + edge.getTime());
                     
                     //Error checking is useful
                     if (neighbour.getCost() < 0) {
@@ -94,6 +94,7 @@ public class AStar {
                     // calculate the new f value using g edge cost and heuristic
                     // something like
                     //f = g(start, currentStop) + edge.getCost() + heuristic(neighbour, end);
+                    System.out.println(edge.getTime());
                     f = f(currentStop, edge.getCost(), neighbour, end);
 
                     //add the neighbour to the queue as a new PathItem
@@ -149,17 +150,17 @@ public class AStar {
     }
 
 
-    public static double f( Stop current, double edgeCost, Stop neighbour, Stop end) {
+    public static double f(Stop current, double edgeCost, Stop neighbour, Stop end) {
         return g(current) + edgeCost + heuristic(neighbour, end);
     }
 
-    public static double g( Stop current) {
+    public static double g(Stop current) {
         return current.getCost();
     }
 
     public static double heuristic(Stop current, Stop goal) {
         //calculate a heuristic for the current stop to the goal stop
-        return current.distance(goal);
+        return current.distance(goal) / Transport.TRAIN_SPEED_MPS;
     }
 
 }

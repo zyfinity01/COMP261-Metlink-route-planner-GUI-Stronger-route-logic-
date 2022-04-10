@@ -207,6 +207,7 @@ public class GraphController {
         event.consume();
     }
 
+
     // handleShowConnectedComponents
     public void handleShowConnectedComponents(ActionEvent event) {
         System.out.println("Show connected components event " + event.getEventType());
@@ -362,6 +363,8 @@ public class GraphController {
      */
     public void drawPathEdges(ArrayList <Edge> pathEdges, GraphicsContext gc) {
         // TODO: set Total time
+        StringBuilder textArea = new StringBuilder();
+        double totalTime = 0;
         String path = "Goal " + goalLocation.getName();
         gc.setLineWidth(3);
         for (Edge edge : pathEdges) {
@@ -378,14 +381,19 @@ public class GraphController {
             Point2D screenToPoint = Projection.model2Screen(edge.getToStop().getPoint(), this);
             drawLine(screenFromPoint.getX(), screenFromPoint.getY(), screenToPoint.getX(), screenToPoint.getY());
             // TODO: calculation of time
+            totalTime += edge.getTime();
 
             // TODO: prepend the edge information to the path string
+            textArea.insert(0, edge.getFromStop().getId() + ":" + edge.getToStop().getId() + "\t" + edge.getTripId() + "\t" + Transport.toTimeString(edge.getTime()) + "\n");
             // probably use edge.getFromStop().getId() edge.getToStop().getId() edge.getTripId() edge.getTime()) totalTime  "\n" + path;
             // prepending to get the path in reverse order
         }
         // TODO: add total time to the path
-
-        tripText.setText("Start: " + startLocation.getName() + "\n" + path);
+        path += "\n" + Transport.toTimeString(totalTime);
+        tripText.clear();
+        tripText.appendText("Start: " + startLocation.getName() + "\n");
+        tripText.appendText(textArea.toString());
+        tripText.appendText(path);
     }
 
     // draw the fare zone
@@ -429,8 +437,8 @@ public class GraphController {
                 if (graph.getSubGraphCount() > 0) {
                     // TODO: set fill colour for the subgraph
                     // something like:
-                    // gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1,1));
-                    gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
+                    gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1,1));
+                    //gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
                 } else {
                     gc.setFill(Color.BLUE);
                 }

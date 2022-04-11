@@ -134,7 +134,7 @@ public class GraphController {
         File tripFile = fileChooser.showOpenDialog(stage);
 
         extentionFilter = new FileChooser.ExtensionFilter("txt files (*.csv)", "*.csv");
-        fileChooser.getExtensionFilters().set(0,extentionFilter);
+        fileChooser.getExtensionFilters().set(0, extentionFilter);
         fileChooser.setTitle("Open Geo File");
         File geoJsonFile = fileChooser.showOpenDialog(stage);
 
@@ -162,12 +162,20 @@ public class GraphController {
         event.consume();
     }
 
+    private String searchText;
+
     // Key typing event for the Start bus stop
     public void handleStartKey(KeyEvent event) {
         System.out.println("Look up event " + event.getEventType() + "  " + ((TextField) event.getSource()).getText());
         String search = ((TextField) event.getSource()).getText();
         // Display the stops that match in the tripText area to help typing
-        tripText.setText(graph.DisplayStops(graph.getAllStops(search)));
+        if (!search.equals(searchText)) {
+            System.out.println("test");
+
+            tripText.setText(graph.DisplayStops(graph.getAllStops(search)));
+            searchText = search;
+        }
+
         event.consume();
     }
 
@@ -176,7 +184,11 @@ public class GraphController {
         System.out.println("Look up event " + event.getEventType() + "  " + ((TextField) event.getSource()).getText());
         String search = ((TextField) event.getSource()).getText();
         // Display the stops that match in the tripText area to help typing
-        tripText.setText(graph.DisplayStops(graph.getAllStops(search)));
+        if (!search.equals(searchText)) {
+            System.out.println("test");
+            tripText.setText(graph.DisplayStops(graph.getAllStops(search)));
+            searchText = search;
+        }
         event.consume();
     }
 
@@ -190,7 +202,7 @@ public class GraphController {
         // perform A* search and get the path edges
         pathEdges = AStar.findShortestPathEdges(graph, startLocation, goalLocation);
 
-        drawGraph(graph); //update the graph
+        drawGraph(graph); // update the graph
         event.consume();
     }
 
@@ -207,11 +219,10 @@ public class GraphController {
         event.consume();
     }
 
-
     // handleShowConnectedComponents
     public void handleShowConnectedComponents(ActionEvent event) {
         System.out.println("Show connected components event " + event.getEventType());
-        //INFO : This is where your find component code is called
+        // INFO : This is where your find component code is called
         graph.findComponents();
         drawGraph(graph);
     }
@@ -230,13 +241,13 @@ public class GraphController {
     // This handles the connection between the slider and the text field
     public void handleWalkingDistance(ActionEvent event) {
         // devide the text value by two so the slider is 0 - 200
-        walkingDistance_sl.setValue(Double.parseDouble(walkingDistance_tf.getText())/2.0);
+        walkingDistance_sl.setValue(Double.parseDouble(walkingDistance_tf.getText()) / 2.0);
     }
 
     // This handles the connection between the slider and the text field
     public void handleWalkingDistanceSlider(ObservableValue<Double> ovn, Double before, Double after) {
         // multiply the slider value by two so the text field is 0 - 200
-        walkingDistance_tf.setText(Double.toString(ovn.getValue()*2.0));
+        walkingDistance_tf.setText(Double.toString(ovn.getValue() * 2.0));
     }
 
     // Mouse scroll for zoom
@@ -251,6 +262,7 @@ public class GraphController {
 
     public double dragStartX = 0;
     public double dragStartY = 0;
+
     // handle starting drag on canvas
     public void handleMousePressed(MouseEvent event) {
         dragStartX = event.getX();
@@ -272,7 +284,6 @@ public class GraphController {
         dragActive = true;
         event.consume();
     }
-
 
     private Stop goalStop = null;
     private Stop prevStartStop = null;
@@ -297,12 +308,12 @@ public class GraphController {
 
         highlightNodes.clear();
         highlightNodes.add(closestStop);
-        
+
         // update the start location to be the old goal location
         startLocation = goalLocation;
         // set the new goal location to be the stop just clicked
         goalLocation = closestStop;
-            // shortest path planning
+        // shortest path planning
         if (startLocation != null && closestStop != startLocation) {
             // INFO: This is where your find path code is called during clicking
             pathEdges = AStar.findShortestPathEdges(graph, startLocation, goalLocation);
@@ -313,6 +324,7 @@ public class GraphController {
 
     /**
      * Find the closest stop to the given Gis Point location
+     * 
      * @param x
      * @param y
      * @param graph
@@ -327,7 +339,8 @@ public class GraphController {
             if (dist < minDist) {
                 minDist = dist;
                 closestStop = stop;
-            };
+            }
+            ;
         }
         if (closestStop != null) {
             return closestStop;
@@ -335,7 +348,7 @@ public class GraphController {
         return null;
     }
 
-    // 
+    //
     public void highlightClosestStop(Stop closestStop) {
         if (closestStop != null) {
             highlightNodes.clear();
@@ -358,15 +371,17 @@ public class GraphController {
 
     /**
      * Draw the Path Edges returned from A* search
+     * 
      * @param pathEdges
      * @param gc
      */
-    public void drawPathEdges(ArrayList <Edge> pathEdges, GraphicsContext gc) {
-        // TODO: set Total time
+    public void drawPathEdges(ArrayList<Edge> pathEdges, GraphicsContext gc) {
+        //set Total time
         StringBuilder textArea = new StringBuilder();
         double totalTime = 0;
         String path = "Goal " + goalLocation.getName();
         gc.setLineWidth(3);
+    
         for (Edge edge : pathEdges) {
             if (edge.getTripId() == Transport.WALKING_TRIP_ID) {
                 gc.setStroke(Color.BLACK);
@@ -380,15 +395,17 @@ public class GraphController {
             Point2D screenFromPoint = Projection.model2Screen(edge.getFromStop().getPoint(), this);
             Point2D screenToPoint = Projection.model2Screen(edge.getToStop().getPoint(), this);
             drawLine(screenFromPoint.getX(), screenFromPoint.getY(), screenToPoint.getX(), screenToPoint.getY());
-            // TODO: calculation of time
+            //calculation of time
             totalTime += edge.getTime();
 
-            // TODO: prepend the edge information to the path string
-            textArea.insert(0, edge.getFromStop().getId() + ":" + edge.getToStop().getId() + "\t" + edge.getTripId() + "\t" + Transport.toTimeString(edge.getTime()) + "\n");
-            // probably use edge.getFromStop().getId() edge.getToStop().getId() edge.getTripId() edge.getTime()) totalTime  "\n" + path;
+            //prepend the edge information to the path string
+            textArea.insert(0, edge.getFromStop().getId() + ":" + edge.getToStop().getId() + "\t" + edge.getTripId() + "\t\t" + Math.round(edge.getCost())
+                    + "\t" + ": to goal " + Transport.toTimeString(totalTime) + "\n");
+            // probably use edge.getFromStop().getId() edge.getToStop().getId()
+            // edge.getTripId() edge.getTime()) totalTime "\n" + path;
             // prepending to get the path in reverse order
         }
-        // TODO: add total time to the path
+        // add total time to the path
         path += "\n" + Transport.toTimeString(totalTime);
         tripText.clear();
         tripText.appendText("Start: " + startLocation.getName() + "\n");
@@ -437,8 +454,8 @@ public class GraphController {
                 if (graph.getSubGraphCount() > 0) {
                     // TODO: set fill colour for the subgraph
                     // something like:
-                    gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1,1));
-                    //gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
+                    gc.setFill(Color.hsb((stop.getSubGraphId() * (360 / (graph.getSubGraphCount()))) % 360, 1, 1));
+                    // gc.setFill(Color.hsb((1*(360/(graph.getSubGraphCount()))) % 360, 1,1));
                 } else {
                     gc.setFill(Color.BLUE);
                 }
@@ -471,7 +488,7 @@ public class GraphController {
             }
         });
 
-        // TODO: set Total time     
+        // TODO: set Total time
         if (pathEdges != null) {
             drawPathEdges(pathEdges, gc);
         }
@@ -479,6 +496,7 @@ public class GraphController {
         drawFareZones(graph.geoJson, gc);
 
         // display the start and goal stops
+
         if (startLocation != null) {
             startText.setText(startLocation.getName());
         }

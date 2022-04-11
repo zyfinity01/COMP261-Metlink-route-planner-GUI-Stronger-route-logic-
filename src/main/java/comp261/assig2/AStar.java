@@ -66,6 +66,7 @@ public class AStar {
             // set the cost for the current node
             currentStop.setCost(currentPathItem.cost);
             currentFringeCost = currentPathItem.cost;
+        
 
             totalExplored++;
 
@@ -81,16 +82,17 @@ public class AStar {
                 // get the neighbour from the edge
                 Stop neighbour = edge.getToStop();
 
+
                 // if the neighbour has not been visited already
                 if(!neighbour.isVisited()){
                     //set the neighbour's cost to the current stop's cost + the edge's cost (time or distance)
+                    edge.setCost(edge.getTime());
                     neighbour.setCost(currentStop.getCost() + edge.getTime());
                     
                     //Error checking is useful
                     if (neighbour.getCost() < 0) {
                             System.out.println("Error: negative cost");
                     }
-
                     // calculate the new f value using g edge cost and heuristic
                     // something like
                     //f = g(start, currentStop) + edge.getCost() + heuristic(neighbour, end);

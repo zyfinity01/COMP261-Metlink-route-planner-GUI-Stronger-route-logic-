@@ -139,21 +139,21 @@ public class Graph {
     // https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm
     // find graph components and lable the nodes in each component
     public int findComponents() {
-        // TODO: implement component analysis
+        // implement component analysis
 
         // reset visited and cost
         resetVisited();
         resetRoot();
 
-        // TODO: go through all stops use recursive to visitAllConnections and build
+        // go through all stops use recursive to visitAllConnections and build
         // visit order
         ArrayList<Stop> visitOrder = new ArrayList<Stop>();
         for (Stop stop : stopList) {
             visitAllConnections(stop, visitOrder);
         }
-        // TODO: search in reverse visit order setting the root node recurssively on
+        // search in reverse visit order setting the root node recurssively on
         // assignRoot
-         //Collections.reverse(visitOrder);
+        // Collections.reverse(visitOrder);
         int components = 0;
         for (Stop stop : visitOrder) {
             if (stop.getRoot() == null) {
@@ -162,10 +162,11 @@ public class Graph {
 
             }
         }
-        // TODO: keep a count of the components
+        // keep a count of the components
 
-        // TODO: set the subgraphs to number of components and return it
+        // set the subgraphs to number of components and return it
         // something like subGraphs = components;
+        System.out.println(components);
         subGraphs = components;
 
         return subGraphs;
@@ -176,7 +177,7 @@ public class Graph {
      * from this stop
      */
     private void visitAllConnections(Stop stop, ArrayList<Stop> visitOrder) {
-        if(stop.isVisited()){
+        if (stop.isVisited()) {
             return;
         }
         // set vistited to true
@@ -193,7 +194,6 @@ public class Graph {
             }
         }
 
-
     }
 
     /**
@@ -203,7 +203,7 @@ public class Graph {
         // set the root of the subgraph to the stop, and the subgraph ID
         stop.setRoot(root);
         stop.setSubGraphId(component);
-        // TODO: for each of the edges in neighbours if the toStop root is empty recurse
+        // for each of the edges in neighbours if the toStop root is empty recurse
         // assigning root and component
         for (Edge edge : stop.getNeighbours()) {
             if (edge.getToStop().getRoot() == null) {
@@ -228,19 +228,21 @@ public class Graph {
 
     // add walking edges
     public void addWalkingEdges(double walkingDistance) {
-        // TODO: add walking edges to all stops
+        //add walking edges to all stops
         int count = 0;
-        // TODO: step through all stops and all potential neighbours
-        {
-            {
-                // TODO: check the distannce between to stops and if it is less then
-                // walkingDistance add an edge to the graph
-                // something like:
-                // stopFrom.addNeighbour( new Edge(stopFrom, stopTo, Transport.WALKING_TRIP_ID,
-                // stopFrom.distance(stopTo)/Transport.WALKING_SPEED_MPS));
+        //step through all stops and all potential neighbours
+        for (Stop stopFrom : stopList) {
+            for (Stop stopTo : stopList) {
 
-                // count the number of edges added
-                count++;
+                // check the distannce between to stops and if it is less then
+                // walkingDistance add an edge to the graph
+                if (stopFrom != stopTo && stopFrom.distance(stopTo) < walkingDistance) {
+                    stopFrom.addNeighbour(new Edge(stopFrom, stopTo, Transport.WALKING_TRIP_ID,
+                            stopFrom.distance(stopTo) / Transport.WALKING_SPEED_MPS));
+
+                    // count the number of edges added
+                    count++;
+                }
 
             }
         }

@@ -42,6 +42,15 @@ public class Graph {
 
     }
 
+    private boolean isDoDistance;
+    public void setDoDistance(){
+        isDoDistance = !isDoDistance;
+    }
+
+    public boolean getDoDistance(){
+        return isDoDistance;
+    }
+
     // buildStoplist from hashmap
     private void buildStopList() {
         stopList = new ArrayList<Stop>();

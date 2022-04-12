@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp261.assig2.GraphController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="comp261.assig2.GraphController">
     <children>
         <VBox fx:id="vbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
             <children>
@@ -40,6 +40,7 @@
                                 <Insets left="50.0" right="50.0" />
                             </GridPane.margin>
                         </TextField>
+                  <Button fx:id="distanceButton" mnemonicParsing="false" onAction="#doDistance" prefWidth="113.0" text="Distance A*" GridPane.columnIndex="5" />
 
                     </children>
                     <columnConstraints>

@@ -46,6 +46,8 @@ public class GraphController {
     @FXML
     private Button maori_bt;
     @FXML
+    private Button distanceButton;
+    @FXML
     private Canvas mapCanvas;
     @FXML
     private Label nodeDisplay;
@@ -110,6 +112,15 @@ public class GraphController {
     // get ratLatLon
     public double getRatioLatLon() {
         return ratioLatLon;
+    }
+
+    public void doDistance() {
+        if(distanceButton.getText().equals("Distance")){
+            distanceButton.setText("Time");
+        } else {
+            distanceButton.setText("Distance");
+        }
+        graph.setDoDistance();
     }
 
     /* handle the load button being pressed connected using FXML */

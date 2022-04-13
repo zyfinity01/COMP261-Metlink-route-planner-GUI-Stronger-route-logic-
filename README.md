@@ -3,7 +3,7 @@
 ## What the code does
 * [x] Minimum: A* search
 * [x] Core: Components and Connections
-* [x] Complete[75-85]: Time taken
+* [x] Completion: Time taken
 * Challenge
    * [x] Allow time or distance in A* search
 
